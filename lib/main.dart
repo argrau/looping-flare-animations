@@ -55,14 +55,14 @@ class StackedDisplay extends StatelessWidget {
   }
 }
 
-class DualAnimationLoopController implements FlareController {
-  final String _startAnimationName;
-  final String _loopAnimationName;
-  final double _mix;
+class WavingFlagDualPage extends StatefulWidget {
+  @override
+  State createState() => _WavingFlagDualPageState();
+}
 
-  DualAnimationLoopController(this._startAnimationName, this._loopAnimationName,
-      [this._mix = 1.0]);
-
+class _WavingFlagDualPageState extends State<WavingFlagDualPage>
+    with FlareController {
+  double _mix = 1.0;
   bool _looping = false;
   double _duration = 0.0;
   ActorAnimation _startAnimation;
@@ -70,8 +70,8 @@ class DualAnimationLoopController implements FlareController {
 
   @override
   void initialize(FlutterActorArtboard artboard) {
-    _startAnimation = artboard.getAnimation(_startAnimationName);
-    _loopAnimation = artboard.getAnimation(_loopAnimationName);
+    _startAnimation = artboard.getAnimation('raise');
+    _loopAnimation = artboard.getAnimation('wave');
   }
 
   @override
@@ -95,15 +95,6 @@ class DualAnimationLoopController implements FlareController {
 
   @override
   void setViewTransform(Mat2D viewTransform) {}
-}
-
-class WavingFlagDualPage extends StatefulWidget {
-  @override
-  State createState() => _WavingFlagDualPageState();
-}
-
-class _WavingFlagDualPageState extends State<WavingFlagDualPage> {
-  final DualAnimationLoopController _loopController = DualAnimationLoopController('raise', 'wave');
 
   @override
   Widget build(BuildContext context) {
@@ -114,22 +105,24 @@ class _WavingFlagDualPageState extends State<WavingFlagDualPage> {
         'assets/flare/waving_golf_flag_dual_animation.flr',
         alignment: Alignment.bottomCenter,
         fit: BoxFit.contain,
-        controller: _loopController,
+        controller: this,
         isPaused: !mounted,
       ),
     );
   }
 }
 
-class EndLoopController implements FlareController {
-  final String _animation;
-  final double _loopAmount;
-  final double _mix;
+class WavingFlagPage extends StatefulWidget {
+  @override
+  State createState() => _WavingFlagState();
+}
 
+class _WavingFlagState extends State<WavingFlagPage> with FlareController {
+  String _animation = 'up_and_wave';
+  double _loopAmount = 2.0;
+  double _mix = 0.5;
   double _duration = 0.0;
   ActorAnimation _actor;
-
-  EndLoopController(this._animation, this._loopAmount, [this._mix = 0.5]);
 
   @override
   void initialize(FlutterActorArtboard artboard) {
@@ -151,16 +144,6 @@ class EndLoopController implements FlareController {
 
   @override
   void setViewTransform(Mat2D viewTransform) {}
-}
-
-class WavingFlagPage extends StatefulWidget {
-  @override
-  State createState() => _WavingFlagState();
-}
-
-class _WavingFlagState extends State<WavingFlagPage> {
-  final EndLoopController _loopController =
-      EndLoopController('up_and_wave', 2.0);
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +154,7 @@ class _WavingFlagState extends State<WavingFlagPage> {
         'assets/flare/waving_golf_flag.flr',
         alignment: Alignment.bottomCenter,
         fit: BoxFit.contain,
-        controller: _loopController,
+        controller: this,
         isPaused: !mounted,
       ),
     );
